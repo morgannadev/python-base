@@ -2,7 +2,7 @@
 
 import os
 import logging
-
+from logging import handlers
 
 # BOILERPLATE
 # TODO: Usar função
@@ -13,17 +13,24 @@ log_level = os.getenv("LOG_LEVEL", "WARNING").upper()
 log = logging.Logger("logs.py", log_level)
 
 # level
-ch = logging.StreamHandler() # ch = console handler - Console/terminal/stderr
-ch.setLevel(log_level)
+# ch = logging.StreamHandler() # ch = console handler - Console/terminal/stderr
+# ch.setLevel(log_level)
+
+fh = handlers.RotatingFileHandler( # fh - file handler
+    "meulog.log", 
+    maxBytes=300, # está em bytes - recomenda-se 10**6 - 1mb
+    backupCount=10
+)
 
 # formatação
 fmt = logging.Formatter(
     '%(asctime)s %(name)s %(levelname)s l:%(lineno)d f:%(filename)s: %(message)s'
 )
-ch.setFormatter(fmt)
+#ch.setFormatter(fmt)
+fh.setFormatter(fmt)
 
 # destino
-log.addHandler(ch)
+log.addHandler(fh)
 
 # log.debug("Mensagem para devs, qe, sysadmin")
 # log.info("Mensagem geral para users")
